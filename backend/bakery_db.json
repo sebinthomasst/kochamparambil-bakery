@@ -1,0 +1,95 @@
+{
+  "admin_users": [
+    {
+      "id": 1,
+      "username": "admin",
+      "password": "$2b$10$9.psAMSVDPlhzlITjPTwBueo.KSC7MH/rdYx0AINluj5y8LdWXrj2"
+    }
+  ],
+  "categories": [
+    {
+      "id": 1,
+      "name": "Birthday Cakes"
+    },
+    {
+      "id": 2,
+      "name": "Wedding Cakes"
+    },
+    {
+      "id": 3,
+      "name": "Anniversary Cakes"
+    },
+    {
+      "id": 4,
+      "name": "Custom Cakes"
+    },
+    {
+      "id": 5,
+      "name": "Pastries"
+    }
+  ],
+  "cakes": [
+    {
+      "id": 1,
+      "name": "Red Velvet Delight",
+      "description": "Classic red velvet cake with cream cheese frosting.",
+      "price": 650,
+      "category_id": 1,
+      "image_url": "https://images.unsplash.com/photo-1586788680434-30d324b2d46f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+      "weight_options": "500g, 1kg, 2kg"
+    },
+    {
+      "id": 2,
+      "name": "Chocolate Truffle",
+      "description": "Rich dark chocolate cake with ganache layering.",
+      "price": 750,
+      "category_id": 1,
+      "image_url": "https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+      "weight_options": "500g, 1kg, 2kg"
+    },
+    {
+      "id": 3,
+      "name": "Strawberry Dream",
+      "description": "Fresh strawberry cream cake with fruit chunks.",
+      "price": 600,
+      "category_id": 2,
+      "image_url": "https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+      "weight_options": "500g, 1kg"
+    },
+    {
+      "id": 1774351697169,
+      "name": "Test",
+      "description": "",
+      "price": "500",
+      "category_id": 1,
+      "image_url": "",
+      "weight_options": "500g, 1kg",
+      "created_at": "2026-03-24T11:28:17.169Z"
+    }
+  ],
+  "bookings": [
+    {
+      "id": 1774351743042,
+      "customer_name": "test",
+      "phone_number": "8787878787",
+      "email": "",
+      "cake_id": "1",
+      "weight": "1kg",
+      "message_on_cake": "",
+      "delivery_date": "2026-03-25",
+      "delivery_time": "",
+      "delivery_option": "pickup",
+      "address": "",
+      "notes": "",
+      "created_at": "2026-03-24T11:29:03.042Z"
+    }
+  ],
+  "settings": {
+    "bakery_name": "Kochamparambil Coolbar and Bakery",
+    "phone": "+91 XXXXX XXXXX",
+    "whatsapp": "+91 XXXXX XXXXX",
+    "email": "info@kochamparambilbakery.com",
+    "address": "Pooppally Junction, Nedumudy, Alappuzha, Kerala – 688501",
+    "hours": "8:00 AM - 9:00 PM"
+  }
+}
