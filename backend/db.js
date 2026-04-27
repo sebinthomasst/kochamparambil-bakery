@@ -36,7 +36,7 @@ class JsonDB {
             { id: 5, name: 'Pastries' }
         ];
         this.data.settings = {
-            bakery_name: 'Kochamparambil Coolbar and Bakery',
+            bakery_name: 'Kochamparambil Bakery and Cakes',
             phone: '+91 XXXXX XXXXX',
             whatsapp: '+91 XXXXX XXXXX',
             email: 'info@kochamparambilbakery.com',
