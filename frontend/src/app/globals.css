@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+:root {
+  --background: #FFF8F0;
+  --foreground: #5C3317;
+  --primary: #FFD6D6;
+  --secondary: #5C3317;
+  --accent: #FF9AA2;
+  --card: #FFFFFF;
+  --card-foreground: #5C3317;
+  --border: #E5E7EB;
+  --input: #E5E7EB;
+  --ring: #FFB3BA;
+}
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: 'Inter', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Playfair Display', serif;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.pastel-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(255, 214, 214, 0.4);
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  @apply bg-primary text-secondary px-6 py-3 rounded-full font-bold hover:bg-accent transition-all duration-300 shadow-md;
+}
