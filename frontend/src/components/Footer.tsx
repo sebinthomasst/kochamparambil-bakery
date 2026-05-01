@@ -33,6 +33,7 @@ export default function Footer() {
               <p>{settings?.address || 'Pooppally Junction, Nedumudy, Alappuzha'}</p>
               <p>Phone: {settings?.phone || '+91 XXXXX XXXXX'}</p>
               <p>WhatsApp: {settings?.whatsapp || '+91 XXXXX XXXXX'}</p>
+              {settings?.instagram && <p>Instagram: <a href={settings.instagram} target="_blank" rel="noopener noreferrer" className="hover:text-primary underline">@kochamparambilbakery</a></p>}
             </address>
           </div>
         </div>

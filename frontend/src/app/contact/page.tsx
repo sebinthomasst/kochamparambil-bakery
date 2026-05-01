@@ -1,11 +1,25 @@
+"use client";
+import { useState, useEffect } from 'react';
+import { getSettings } from '@/lib/api';
+
 export default function ContactPage() {
+    const [settings, setSettings] = useState<any>(null);
+
+    useEffect(() => {
+        getSettings().then(setSettings);
+    }, []);
+
     const contactInfo = [
-        { label: 'Address', value: 'Poopally Junction, Nedumudy, Ponga PO, Alappuzha', icon: '📍' },
-        { label: 'Phone', value: '79073 51449 / 98468 90967 / 62823 92562', icon: '📞' },
-        { label: 'WhatsApp', value: '+91 79073 51449', icon: '💬' },
-        { label: 'Email', value: 'info@kochamparambilbakery.com', icon: '✉️' },
-        { label: 'Opening Hours', value: '8:00 AM - 9:00 PM (Daily)', icon: '🕒' },
+        { label: 'Address', value: settings?.address || 'Poopally Junction, Nedumudy, Ponga PO, Alappuzha', icon: '📍' },
+        { label: 'Phone', value: settings?.phone || '79073 51449 / 98468 90967', icon: '📞' },
+        { label: 'WhatsApp', value: settings?.whatsapp || '+91 79073 51449', icon: '💬' },
+        { label: 'Email', value: settings?.email || 'info@kochamparambilbakery.com', icon: '✉️' },
+        { label: 'Opening Hours', value: settings?.hours || '8:00 AM - 9:00 PM (Daily)', icon: '🕒' },
     ];
+
+    if (settings?.instagram) {
+        contactInfo.push({ label: 'Instagram', value: '@kochamparambilbakery', icon: '📸' });
+    }
 
     return (
         <div className="pt-32 pb-20 bg-background min-h-screen">
@@ -23,19 +37,30 @@ export default function ContactPage() {
                                         <span className="text-3xl">{info.icon}</span>
                                         <div>
                                             <h3 className="font-bold text-gray-500 text-sm uppercase tracking-wider">{info.label}</h3>
-                                            <p className="text-lg text-secondary font-medium">{info.value}</p>
+                                            {info.label === 'Instagram' && settings?.instagram ? (
+                                                <a href={settings.instagram} target="_blank" rel="noopener noreferrer" className="text-lg text-primary font-medium hover:underline">
+                                                    {info.value}
+                                                </a>
+                                            ) : (
+                                                <p className="text-lg text-secondary font-medium">{info.value}</p>
+                                            )}
                                         </div>
                                     </div>
                                 ))}
                             </div>
                             
-                            <div className="mt-12 flex space-x-4">
-                                <a href="https://wa.me/917907351449" className="btn-primary flex-1 text-center">
-                                    WhatsApp Us
+                            <div className="mt-12 flex flex-col sm:flex-row gap-4">
+                                <a href={`tel:${settings?.phone?.split(',')[0]?.replace(/[^0-9+]/g, '') || '+917907351449'}`} className="bg-secondary text-white px-6 py-3 rounded-full font-bold hover:bg-opacity-90 transition text-center flex-1">
+                                    Call Us
                                 </a>
-                                <a href="tel:+917907351449" className="bg-secondary text-white px-6 py-3 rounded-full font-bold hover:bg-opacity-90 transition text-center flex-1">
-                                    Call Now
+                                <a href={`https://wa.me/${settings?.whatsapp?.replace(/[^0-9]/g, '') || '917907351449'}`} className="btn-primary flex-1 text-center">
+                                    WhatsApp
                                 </a>
+                                {settings?.instagram && (
+                                    <a href={settings.instagram} target="_blank" rel="noopener noreferrer" className="bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-white px-6 py-3 rounded-full font-bold hover:opacity-90 transition text-center flex-1">
+                                        Instagram
+                                    </a>
+                                )}
                             </div>
                         </div>
 
@@ -64,3 +89,4 @@ export default function ContactPage() {
         </div>
     );
 }
+

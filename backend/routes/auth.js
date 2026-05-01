@@ -7,10 +7,17 @@ const SECRET_KEY = process.env.JWT_SECRET || 'your_secret_key_here';
 
 router.post('/login', async (req, res) => {
     const { username, password } = req.body;
-    const db = req.app.get('db');
+    const db = req.app.get('db'); // this is the supabase client now
 
     try {
-        const user = await db.get('SELECT * FROM admin_users WHERE username = ?', [username]);
+        const { data: users, error } = await db
+            .from('admin_users')
+            .select('*')
+            .eq('username', username)
+            .limit(1);
+
+        if (error) throw error;
+        const user = users && users.length > 0 ? users[0] : null;
 
         if (user && await bcrypt.compare(password, user.password)) {
             const token = jwt.sign({ id: user.id }, SECRET_KEY, { expiresIn: '24h' });
@@ -24,3 +31,4 @@ router.post('/login', async (req, res) => {
 });
 
 module.exports = router;
+

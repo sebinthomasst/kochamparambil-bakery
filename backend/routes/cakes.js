@@ -19,14 +19,23 @@ router.get('/', async (req, res) => {
     const db = req.app.get('db');
     const { category_id } = req.query;
     try {
-        let query = 'SELECT cakes.*, categories.name as category_name FROM cakes JOIN categories ON cakes.category_id = categories.id';
-        const params = [];
+        let query = db.from('cakes').select('*, categories(name)');
+        
         if (category_id) {
-            query += ' WHERE category_id = ?';
-            params.push(category_id);
+            query = query.eq('category_id', category_id);
         }
-        const cakes = await db.all(query, params);
-        res.json(cakes);
+        
+        const { data: cakes, error } = await query;
+        if (error) throw error;
+        
+        // Map the categories(name) to category_name to match previous API
+        const formattedCakes = cakes ? cakes.map(c => ({
+            ...c,
+            category_name: c.categories ? c.categories.name : null,
+            categories: undefined
+        })) : [];
+
+        res.json(formattedCakes);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -36,11 +45,13 @@ router.post('/', authenticateToken, async (req, res) => {
     const { name, description, price, category_id, image_url, weight_options } = req.body;
     const db = req.app.get('db');
     try {
-        const result = await db.run(
-            'INSERT INTO cakes (name, description, price, category_id, image_url, weight_options) VALUES (?, ?, ?, ?, ?, ?)',
-            [name, description, price, category_id, image_url, weight_options]
-        );
-        res.json({ id: result.lastID });
+        const { data, error } = await db
+            .from('cakes')
+            .insert([{ name, description, price, category_id, image_url, weight_options }])
+            .select();
+            
+        if (error) throw error;
+        res.json({ id: data[0].id });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -51,10 +62,12 @@ router.put('/:id', authenticateToken, async (req, res) => {
     const { name, description, price, category_id, image_url, weight_options } = req.body;
     const db = req.app.get('db');
     try {
-        await db.run(
-            'UPDATE cakes SET name = ?, description = ?, price = ?, category_id = ?, image_url = ?, weight_options = ? WHERE id = ?',
-            [name, description, price, category_id, image_url, weight_options, id]
-        );
+        const { error } = await db
+            .from('cakes')
+            .update({ name, description, price, category_id, image_url, weight_options })
+            .eq('id', id);
+            
+        if (error) throw error;
         res.json({ success: true });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -65,7 +78,8 @@ router.delete('/:id', authenticateToken, async (req, res) => {
     const { id } = req.params;
     const db = req.app.get('db');
     try {
-        await db.run('DELETE FROM cakes WHERE id = ?', [id]);
+        const { error } = await db.from('cakes').delete().eq('id', id);
+        if (error) throw error;
         res.json({ success: true });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -83,7 +97,8 @@ router.post('/upload', authenticateToken, upload.single('image'), (req, res) => 
 router.get('/categories', async (req, res) => {
     const db = req.app.get('db');
     try {
-        const categories = await db.all('SELECT * FROM categories');
+        const { data: categories, error } = await db.from('categories').select('*');
+        if (error) throw error;
         res.json(categories);
     } catch (err) {
         res.status(500).json({ error: err.message });
