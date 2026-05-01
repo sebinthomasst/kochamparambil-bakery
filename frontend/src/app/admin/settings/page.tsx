@@ -51,14 +51,18 @@ export default function SettingsManagement() {
                     <input type="text" name="bakery_name" value={settings.bakery_name} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:border-primary transition" />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="space-y-2">
                         <label className="block text-sm font-bold text-gray-700">Phone Number</label>
-                        <input type="text" name="phone" value={settings.phone} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:border-primary transition" />
+                        <input type="text" name="phone" value={settings.phone || ''} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:border-primary transition" />
                     </div>
                     <div className="space-y-2">
                         <label className="block text-sm font-bold text-gray-700">WhatsApp Number</label>
-                        <input type="text" name="whatsapp" value={settings.whatsapp} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:border-primary transition" />
+                        <input type="text" name="whatsapp" value={settings.whatsapp || ''} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:border-primary transition" />
+                    </div>
+                    <div className="space-y-2">
+                        <label className="block text-sm font-bold text-gray-700">Instagram Link</label>
+                        <input type="text" name="instagram" value={settings.instagram || ''} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:border-primary transition" />
                     </div>
                 </div>
 
