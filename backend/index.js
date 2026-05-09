@@ -23,16 +23,14 @@ app.use('/api/cakes', cakeRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/settings', settingsRoutes);
 
-async function startServer() {
-    try {
-        const db = await initDb();
-        app.set('db', db);
-        app.listen(PORT, () => {
-            console.log(`Backend server running on http://localhost:${PORT}`);
-        });
-    } catch (err) {
-        console.error('Failed to start server:', err);
-    }
+const db = initDb();
+app.set('db', db);
+
+// Only listen if not running in a serverless environment
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+    app.listen(PORT, () => {
+        console.log(`Backend server running on http://localhost:${PORT}`);
+    });
 }
 
-startServer();
+module.exports = app;
