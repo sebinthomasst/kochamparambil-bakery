@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS public.admin_users (
 -- 2. Create categories table
 CREATE TABLE IF NOT EXISTS public.categories (
     id SERIAL PRIMARY KEY,
-    name TEXT NOT NULL
+    name TEXT NOT NULL UNIQUE
 );
 
 -- 3. Create cakes table
@@ -72,4 +72,4 @@ INSERT INTO public.categories (name) VALUES
     ('Anniversary Cakes'),
     ('Custom Cakes'),
     ('Pastries')
-ON CONFLICT DO NOTHING;
+ON CONFLICT (name) DO NOTHING;
