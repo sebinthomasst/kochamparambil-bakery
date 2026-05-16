@@ -7,7 +7,7 @@ export default function CakesManagement() {
     const [categories, setCategories] = useState<any[]>([]);
     const [isEditing, setIsEditing] = useState(false);
     const [currentCake, setCurrentCake] = useState<any>(null);
-    const [loading, setLoading] = useState(true);
+    const [isUploading, setIsUploading] = useState(false);
 
     useEffect(() => {
         fetchData();
@@ -40,6 +40,10 @@ export default function CakesManagement() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (isUploading) {
+            alert('Please wait for the image to finish uploading');
+            return;
+        }
         await saveCake(currentCake, currentCake.id);
         setIsEditing(false);
         fetchData();
@@ -47,8 +51,20 @@ export default function CakesManagement() {
 
     const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
-            const res = await uploadImage(e.target.files[0]);
-            setCurrentCake({ ...currentCake, image_url: res.imageUrl });
+            setIsUploading(true);
+            try {
+                const res = await uploadImage(e.target.files[0]);
+                if (res.imageUrl) {
+                    setCurrentCake((prev: any) => ({ ...prev, image_url: res.imageUrl }));
+                } else {
+                    alert('Upload failed: ' + (res.error || 'Unknown error'));
+                }
+            } catch (err) {
+                alert('Error uploading image');
+                console.error(err);
+            } finally {
+                setIsUploading(false);
+            }
         }
     };
 
@@ -92,13 +108,16 @@ export default function CakesManagement() {
                             </div>
                             <div>
                                 <label className="block text-sm font-bold mb-1">Cake Image</label>
-                                <input type="file" onChange={handleImageUpload} className="mb-2" />
-                                {currentCake.image_url && <img src={currentCake.image_url.startsWith('https') ? currentCake.image_url : `http://localhost:5000${currentCake.image_url}`} className="h-32 rounded-lg" />}
+                                <input type="file" onChange={handleImageUpload} disabled={isUploading} className="mb-2" />
+                                {isUploading && <p className="text-blue-500 animate-pulse text-sm">Uploading image to cloud...</p>}
+                                {currentCake.image_url && <img src={currentCake.image_url.startsWith('https') ? currentCake.image_url : `http://localhost:5000${currentCake.image_url}`} className="h-32 rounded-lg mt-2" />}
                             </div>
                         </div>
                         <div className="flex justify-end space-x-4 mt-8">
                             <button type="button" onClick={() => setIsEditing(false)} className="px-6 py-2">Cancel</button>
-                            <button type="submit" className="btn-primary">Save Changes</button>
+                            <button type="submit" disabled={isUploading} className={`btn-primary ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                                {isUploading ? 'Uploading...' : 'Save Changes'}
+                            </button>
                         </div>
                     </form>
                 </div>
