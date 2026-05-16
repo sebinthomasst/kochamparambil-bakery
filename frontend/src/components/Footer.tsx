@@ -1,9 +1,15 @@
 "use client";
 import { useState, useEffect } from 'react';
 import { getSettings } from '@/lib/api';
+import { usePathname } from 'next/navigation';
 
 export default function Footer() {
+    const pathname = usePathname();
     const [settings, setSettings] = useState<any>(null);
+
+    if (pathname.startsWith('/admin')) {
+        return null;
+    }
 
     useEffect(() => {
         getSettings().then(setSettings);
