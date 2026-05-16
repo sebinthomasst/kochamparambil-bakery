@@ -23,6 +23,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     const navItems = [
         { label: 'Dashboard', href: '/admin', icon: '📊' },
         { label: 'Cake Menu', href: '/admin/cakes', icon: '🎂' },
+        { label: 'Categories', href: '/admin/categories', icon: '🏷️' },
         { label: 'Orders', href: '/admin/orders', icon: '🧾' },
         { label: 'Settings', href: '/admin/settings', icon: '⚙️' },
     ];
@@ -59,7 +60,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                         onClick={handleLogout}
                         className="flex items-center space-x-3 px-4 py-3 w-full rounded-xl text-red-300 hover:bg-red-500 hover:bg-opacity-10 transition"
                     >
-                        <span>logout</span>
+                        <span>🚪</span>
                         <span>Sign Out</span>
                     </button>
                     <Link href="/" className="block mt-4 text-center text-xs text-gray-500 hover:text-white">

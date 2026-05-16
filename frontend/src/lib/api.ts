@@ -72,6 +72,24 @@ export async function deleteCake(id: number) {
     return res.json();
 }
 
+export async function saveCategory(categoryData: { name: string }, id?: number) {
+    const url = id ? `${API_BASE_URL}/cakes/categories/${id}` : `${API_BASE_URL}/cakes/categories`;
+    const res = await fetch(url, {
+        method: id ? 'PUT' : 'POST',
+        headers: getAdminHeaders(),
+        body: JSON.stringify(categoryData)
+    });
+    return res.json();
+}
+
+export async function deleteCategory(id: number) {
+    const res = await fetch(`${API_BASE_URL}/cakes/categories/${id}`, {
+        method: 'DELETE',
+        headers: getAdminHeaders()
+    });
+    return res.json();
+}
+
 export async function uploadImage(file: File) {
     const formData = new FormData();
     formData.append('image', file);

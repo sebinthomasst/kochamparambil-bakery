@@ -105,4 +105,41 @@ router.get('/categories', async (req, res) => {
     }
 });
 
+router.post('/categories', authenticateToken, async (req, res) => {
+    const { name } = req.body;
+    const db = req.app.get('db');
+    try {
+        const { data, error } = await db.from('categories').insert([{ name }]).select();
+        if (error) throw error;
+        res.json({ id: data[0].id });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+router.put('/categories/:id', authenticateToken, async (req, res) => {
+    const { id } = req.params;
+    const { name } = req.body;
+    const db = req.app.get('db');
+    try {
+        const { error } = await db.from('categories').update({ name }).eq('id', id);
+        if (error) throw error;
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+router.delete('/categories/:id', authenticateToken, async (req, res) => {
+    const { id } = req.params;
+    const db = req.app.get('db');
+    try {
+        const { error } = await db.from('categories').delete().eq('id', id);
+        if (error) throw error;
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 module.exports = router;
