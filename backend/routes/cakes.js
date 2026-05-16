@@ -87,23 +87,30 @@ router.post('/upload', authenticateToken, upload.single('image'), async (req, re
     const filename = `${Date.now()}${path.extname(req.file.originalname)}`;
 
     try {
-        const { data, error } = await db.storage
+        const { data, error: uploadError } = await db.storage
             .from('cake_images')
             .upload(filename, req.file.buffer, {
                 contentType: req.file.mimetype,
                 upsert: false
             });
 
-        if (error) throw error;
+        if (uploadError) {
+            console.error('Supabase Storage Error:', uploadError);
+            return res.status(500).json({ error: 'Supabase Storage Error: ' + uploadError.message });
+        }
 
         const { data: publicUrlData } = db.storage
             .from('cake_images')
             .getPublicUrl(filename);
 
+        if (!publicUrlData || !publicUrlData.publicUrl) {
+            return res.status(500).json({ error: 'Failed to generate public URL' });
+        }
+
         res.json({ imageUrl: publicUrlData.publicUrl });
     } catch (err) {
-        console.error('Upload error:', err);
-        res.status(500).json({ error: err.message });
+        console.error('Unexpected Upload Error:', err);
+        res.status(500).json({ error: 'Internal Server Error: ' + err.message });
     }
 });
 

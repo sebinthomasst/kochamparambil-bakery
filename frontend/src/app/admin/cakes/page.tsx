@@ -90,7 +90,13 @@ export default function CakesManagement() {
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <label className="block text-sm font-bold mb-1">Price (₹)</label>
-                                    <input type="number" required value={currentCake.price} onChange={e => setCurrentCake({...currentCake, price: e.target.value})} className="w-full border rounded-xl p-3" />
+                                    <input 
+                                        type="number" 
+                                        required 
+                                        value={currentCake.price} 
+                                        onChange={e => setCurrentCake({...currentCake, price: parseFloat(e.target.value) || 0})} 
+                                        className="w-full border rounded-xl p-3" 
+                                    />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-bold mb-1">Category</label>
@@ -109,9 +115,42 @@ export default function CakesManagement() {
                             </div>
                             <div>
                                 <label className="block text-sm font-bold mb-1">Cake Image</label>
-                                <input type="file" onChange={handleImageUpload} disabled={isUploading} className="mb-2" />
-                                {isUploading && <p className="text-blue-500 animate-pulse text-sm">Uploading image to cloud...</p>}
-                                {currentCake.image_url && <img src={currentCake.image_url.startsWith('https') ? currentCake.image_url : `http://localhost:5000${currentCake.image_url}`} className="h-32 rounded-lg mt-2" />}
+                                <div className="space-y-4">
+                                    <div className="bg-gray-50 p-4 rounded-xl border-2 border-dashed border-gray-200">
+                                        <p className="text-xs text-gray-500 mb-2 uppercase font-bold tracking-wider">Option 1: Upload from computer</p>
+                                        <input type="file" onChange={handleImageUpload} disabled={isUploading} className="w-full text-sm" />
+                                        {isUploading && <p className="text-blue-500 animate-pulse text-sm mt-2 font-bold">Uploading to cloud...</p>}
+                                    </div>
+                                    
+                                    <div className="bg-gray-50 p-4 rounded-xl border-2 border-dashed border-gray-200">
+                                        <p className="text-xs text-gray-500 mb-2 uppercase font-bold tracking-wider">Option 2: Paste Image URL</p>
+                                        <input 
+                                            type="text" 
+                                            value={currentCake.image_url} 
+                                            onChange={e => setCurrentCake({...currentCake, image_url: e.target.value})} 
+                                            className="w-full border rounded-lg p-2 text-sm" 
+                                            placeholder="https://example.com/image.jpg"
+                                        />
+                                    </div>
+
+                                    {currentCake.image_url && (
+                                        <div className="relative inline-block mt-2">
+                                            <p className="text-xs text-gray-400 mb-1">Image Preview:</p>
+                                            <img 
+                                                src={currentCake.image_url.startsWith('http') ? currentCake.image_url : `http://localhost:5000${currentCake.image_url}`} 
+                                                className="h-40 w-full object-cover rounded-2xl shadow-md border-4 border-white" 
+                                            />
+                                            <button 
+                                                type="button" 
+                                                onClick={() => setCurrentCake({...currentCake, image_url: ''})}
+                                                className="absolute top-6 right-2 bg-red-500 text-white rounded-full p-1 shadow-lg hover:bg-red-600 transition"
+                                                title="Remove image"
+                                            >
+                                                ✕
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
                         <div className="flex justify-end space-x-4 mt-8">
