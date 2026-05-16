@@ -4,15 +4,7 @@ const multer = require('multer');
 const path = require('path');
 const authenticateToken = require('../middleware/auth');
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/');
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname));
-    }
-});
-
+const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 router.get('/', async (req, res) => {
@@ -86,12 +78,33 @@ router.delete('/:id', authenticateToken, async (req, res) => {
     }
 });
 
-router.post('/upload', authenticateToken, upload.single('image'), (req, res) => {
+router.post('/upload', authenticateToken, upload.single('image'), async (req, res) => {
     if (!req.file) {
         return res.status(400).json({ error: 'No file uploaded' });
     }
-    const imageUrl = `/uploads/${req.file.filename}`;
-    res.json({ imageUrl });
+
+    const db = req.app.get('db');
+    const filename = `${Date.now()}${path.extname(req.file.originalname)}`;
+
+    try {
+        const { data, error } = await db.storage
+            .from('cake_images')
+            .upload(filename, req.file.buffer, {
+                contentType: req.file.mimetype,
+                upsert: false
+            });
+
+        if (error) throw error;
+
+        const { data: publicUrlData } = db.storage
+            .from('cake_images')
+            .getPublicUrl(filename);
+
+        res.json({ imageUrl: publicUrlData.publicUrl });
+    } catch (err) {
+        console.error('Upload error:', err);
+        res.status(500).json({ error: err.message });
+    }
 });
 
 router.get('/categories', async (req, res) => {
