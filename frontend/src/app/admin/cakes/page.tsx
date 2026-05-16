@@ -8,6 +8,7 @@ export default function CakesManagement() {
     const [isEditing, setIsEditing] = useState(false);
     const [currentCake, setCurrentCake] = useState<any>(null);
     const [isUploading, setIsUploading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         fetchData();
