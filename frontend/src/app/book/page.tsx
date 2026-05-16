@@ -5,7 +5,7 @@ import { getCakes, submitBooking } from '@/lib/api';
 
 function BookingForm() {
     const searchParams = useSearchParams();
-    const [cakes, setCakes] = useState([]);
+    const [cakes, setCakes] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
     const [submitted, setSubmitted] = useState(false);
